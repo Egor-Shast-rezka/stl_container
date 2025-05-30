@@ -24,7 +24,7 @@ make
 To start the programm, run the compiled executable:
 
 ```sh
-./bin/Start -d # Running a sample program
+./bin/Start # Running a sample program
 ```
 
 ## Tests
