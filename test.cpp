@@ -137,6 +137,59 @@ TEST(CircularLinkedListTest, ReverseList) {
     EXPECT_EQ(list.at(2), 1);
 }
 
+// Check: move
+TEST(CircularLinkedListTest, MoveConstructor) {
+    CircularLinkedList<int> original = {10, 20, 30};
+    CircularLinkedList<int> moved = std::move(original);
+
+    EXPECT_EQ(moved.size(), 3);
+    EXPECT_EQ(moved.front(), 10);
+    EXPECT_TRUE(original.empty());
+}
+
+TEST(CircularLinkedListTest, CopyAssignment) {
+    CircularLinkedList<int> a = {7, 8};
+    CircularLinkedList<int> b;
+    b = a;
+
+    EXPECT_EQ(b.size(), 2);
+    EXPECT_EQ(b[0], 7);
+    EXPECT_EQ(b[1], 8);
+}
+
+TEST(CircularLinkedListTest, OutOfRangeAccessThrows) {
+    CircularLinkedList<int> list = {1, 2, 3};
+
+    EXPECT_THROW(list.at(3), std::out_of_range);
+    EXPECT_THROW(list.at(100), std::out_of_range);
+}
+
+TEST(CircularLinkedListTest, SingleElementConsistency) {
+    CircularLinkedList<int> list;
+    list.push_back(42);
+
+    EXPECT_EQ(list.front(), 42);
+    EXPECT_EQ(list.back(), 42);
+
+    list.pop_front();
+
+    EXPECT_TRUE(list.empty());
+}
+
+TEST(CircularLinkedListTest, RepeatedPushPop) {
+    CircularLinkedList<int> list;
+
+    for (int i = 0; i < 100; ++i)
+        list.push_back(i);
+
+    EXPECT_EQ(list.size(), 100);
+
+    for (int i = 0; i < 100; ++i)
+        list.pop_front();
+
+    EXPECT_TRUE(list.empty());
+}
+
 
 // ================= main ===================
 

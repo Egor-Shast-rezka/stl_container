@@ -45,9 +45,13 @@ public:
         }
     }
 
+    bool empty() const {
+        return size_ == 0;
+    }
+
     // Copy constructor (deep copy)
     CircularLinkedList(const CircularLinkedList& other) : tail(nullptr), size_(0) {
-        if (!other.isEmpty()) {
+        if (!other.empty()) {
             Node<T>* current = other.tail->next; // Start from head
             do {
                 push_back(current->data);
@@ -55,9 +59,16 @@ public:
             } while (current != other.tail->next);
         }
     }
+
+    // Move constructor
+    CircularLinkedList(CircularLinkedList&& other) noexcept
+        : tail(other.tail), size_(other.size_) {
+        other.tail = nullptr;
+        other.size_ = 0;
+    }
     
     bool is_list_correct() const {
-        if (isEmpty()) return true;
+        if (empty()) return true;
         Node<T>* current = tail->next;
         size_t count = 0;
         do {
@@ -80,10 +91,10 @@ public:
     CircularLinkedList& operator=(const CircularLinkedList& other) {
         if (this != &other) {
             clear();
-            if (!other.isEmpty()) {
+            if (!other.empty()) {
                 Node<T>* current = other.tail->next;
                 do {
-                    insertEnd(current->data);
+                    push_back(current->data);
                     current = current->next;
                 } while (current != other.tail->next);
             }
@@ -91,15 +102,10 @@ public:
         return *this;
     }
 
-    // Check if list is empty
-    bool isEmpty() const {
-        return tail == nullptr;
-    }
-
     // Insert element at beginning of list
     void push_front(const T& data) {
         Node<T>* newNode = new Node<T>(data);
-        if (isEmpty()) {
+        if (empty()) {
             tail = newNode;
             tail->next = tail;  // Single node points to itself
         }
@@ -112,7 +118,7 @@ public:
 
     // Insert element at end of list
     void push_back(const T& data) {
-        if (isEmpty()) {
+        if (empty()) {
             push_front(data);
         }
         else {
@@ -126,7 +132,7 @@ public:
 
     // Remove first element
     void pop_front() {
-        if (isEmpty()) {
+        if (empty()) {
             throw std::out_of_range("List is empty");
         }
 
@@ -145,7 +151,7 @@ public:
 
     // Remove element by value (first occurrence)
     void remove(const T& value) {
-        if (isEmpty()) return;
+        if (empty()) return;
 
         Node<T>* current = tail->next; // Start at head
         Node<T>* prev = tail; // Previous node
@@ -153,9 +159,10 @@ public:
         do {
             if (current->data == value) {
                 if (current == tail) {
-                    // Special case: removing tail
-                    pop_front(); // Use pop_front for head removal
-                    tail = prev; // Update tail pointer
+                    prev->next = current->next;
+                    delete current;
+                    tail = prev;
+                    size_--;
                     return;
                 }
                 prev->next = current->next;
@@ -174,7 +181,7 @@ public:
 
     // Access first element (head)
     T& front() const {
-        if (isEmpty()) {
+        if (empty()) {
             throw std::out_of_range("List is empty");
         }
         return tail->next->data;
@@ -182,7 +189,7 @@ public:
 
     // Access last element (tail)
     T& back() const {
-        if (isEmpty()) {
+        if (empty()) {
             throw std::out_of_range("List is empty");
         }
         return tail->data;
@@ -203,7 +210,7 @@ public:
 
     // Clear entire list
     void clear() {
-        while (!isEmpty()) {
+        while (!empty()) {
             pop_front(); // Changed to pop_front
         }
         size_ = 0;
@@ -217,9 +224,9 @@ public:
 
     // Merge with another list (transfer ownership)
     void merge(CircularLinkedList& other) {
-        if (this == &other || other.isEmpty()) return;
+        if (this == &other || other.empty()) return;
 
-        if (isEmpty()) {
+        if (empty()) {
             // Simple takeover if current list is empty
             tail = other.tail;
             size_ = other.size_;
@@ -243,23 +250,39 @@ public:
 
     // Iterator class for range-based loops
     class Iterator {
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using reference = T&;
+
     private:
-        Node<T>* current; // Current node pointer
-        Node<T>* tailNode; // Original tail reference
+        Node<T>* current;
+        Node<T>* tailNode;
 
     public:
+
+        Iterator() : current(nullptr), tailNode(nullptr) {}
+
         Iterator(Node<T>* node, Node<T>* tail)
             : current(node), tailNode(tail) {}
 
-        // Dereference operator
-        T& operator*() const {
+        // Dereference
+        reference operator*() const {
             return current->data;
         }
 
-        // Pre-increment operator
+        // Arrow operator
+        pointer operator->() const {
+            return &(current->data);
+        }
+
+        // Pre-increment
         Iterator& operator++() {
+            if (current == nullptr) return *this;
             if (current == tailNode) {
-                current = nullptr; // End of cycle
+                current = nullptr;
             }
             else {
                 current = current->next;
@@ -267,15 +290,46 @@ public:
             return *this;
         }
 
-        // Inequality operator
-        bool operator!=(const Iterator& other) const {
-            return current != other.current;
+        // Post-increment
+        Iterator operator++(int) {
+            Iterator temp = *this;
+            ++(*this);
+            return temp;
         }
+
+        // Equality
+        bool operator==(const Iterator& other) const {
+            return current == other.current;
+        }
+
+        // Inequality
+        bool operator!=(const Iterator& other) const {
+            return !(*this == other);
+        }
+
+        bool operator<(const Iterator& other) const {
+            return current < other.current;
+        }
+
+        bool operator>(const Iterator& other) const {
+            return current > other.current;
+        }
+
+        bool operator<=(const Iterator& other) const {
+            return current <= other.current;
+        }
+
+        bool operator>=(const Iterator& other) const {
+            return current >= other.current;
+        }
+
+        Node<T>* get_node() const { return current; }
     };
+
 
     // Begin iterator (start of list)
     Iterator begin() {
-        if (isEmpty()) return end();
+        if (empty()) return end();
         return Iterator(tail->next, tail);
     }
 
@@ -284,10 +338,20 @@ public:
         return Iterator(nullptr, nullptr);
     }
 
+    // const versions
+    Iterator cbegin() const {
+        return empty() ? cend() : Iterator(tail->next, tail);
+    }
+
+    // const versions
+    Iterator cend() const {
+        return Iterator(nullptr, nullptr);
+    }
+
     // Concatenation operator (creates new list)
     CircularLinkedList operator+(const CircularLinkedList& other) const {
         CircularLinkedList result(*this); // Copy current list
-        if (!other.isEmpty()) {
+        if (!other.empty()) {
             Node<T>* current = other.tail->next;
             do {
                 result.push_back(current->data);
@@ -299,7 +363,7 @@ public:
 
     // Compound concatenation operator
     CircularLinkedList& operator+=(const CircularLinkedList& other) {
-        if (!other.isEmpty()) {
+        if (!other.empty()) {
             Node<T>* current = other.tail->next;
             do {
                 push_back(current->data);
@@ -312,7 +376,7 @@ public:
     // Output operator for printing
     friend std::ostream& operator<<(std::ostream& os,
         const CircularLinkedList& cll) {
-        if (cll.isEmpty()) {
+        if (cll.empty()) {
             os << "[EMPTY]";
             return os;
         }
@@ -329,7 +393,7 @@ public:
 
     // Remove last element
     void pop_back() {
-        if (isEmpty()) {
+        if (empty()) {
             throw std::out_of_range("List is empty");
         }
         if (tail->next == tail) {
@@ -411,11 +475,6 @@ public:
     // Return number of elements in list
     size_t size() const {
         return size_;
-    }
-
-    // Check if list is empty
-    bool empty() const {
-        return size_ == 0;
     }
 
     // Find first occurrence of value, return index or -1

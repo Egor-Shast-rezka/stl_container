@@ -3,156 +3,163 @@
 This document provides a detailed description of the `CircularLinkedList<T>` container, including its methods and their time complexities.
 
 ## Class Overview
-The `CircularLinkedList<T>` is a template-based circular linked list implementation. It maintains a `tail` pointer, which points to the last node in the list. The `tail->next` then points to the head of the list, forming a circular structure.
+The `CircularLinkedList<T>` is a template-based circular linked list implementation. It maintains a `tail` pointer, which points to the last node in the list. The `tail->next` points to the head of the list, forming a circular structure.
 
 ## Class Members
 
 ### Private Members
-* `Node<T>* tail`: Pointer to the last node in the list. For an empty list, this is `nullptr`.
-* `size_t size_`: Stores the current number of elements in the list.
+* `Node<T>* tail`: Pointer to the last node. `nullptr` if empty.
+* `size_t size_`: Current number of elements in the list.
 
 ### Public Methods
 
 #### Constructors
 * `CircularLinkedList()`
-    * **Description**: Default constructor. Initializes an empty circular linked list.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Default constructor. Initializes an empty list.
+  * **Time Complexity**: $O(1)$
 * `CircularLinkedList(std::initializer_list<T> init)`
-    * **Description**: Constructor that initializes the list with elements from an `std::initializer_list`.
-    * **Time Complexity**: $O(N)$, where $N$ is the number of elements in the `initializer_list`. Each `push_back` operation takes $O(1)$ amortized time.
+  * **Description**: Initializes list with elements from `std::initializer_list`.
+  * **Time Complexity**: $O(N)$ (N = elements in `init`)
 * `CircularLinkedList(const CircularLinkedList& other)`
-    * **Description**: Copy constructor. Performs a deep copy of the `other` list.
-    * **Time Complexity**: $O(N)$, where $N$ is the size of the `other` list. Each element is copied individually.
+  * **Description**: Deep copy constructor.
+  * **Time Complexity**: $O(N)$ (N = size of `other`)
+* `CircularLinkedList(CircularLinkedList&& other) noexcept`
+  * **Description**: Move constructor (**Bugged**: Uses undefined `head`/`listSize`).
+  * **Time Complexity**: $O(1)$ (Intended)
 
 #### Destructor
 * `~CircularLinkedList()`
-    * **Description**: Destructor. Frees all dynamically allocated nodes in the list. Includes a check for corrupted node chains.
-    * **Time Complexity**: $O(N)$, where $N$ is the number of elements in the list, due to calling `clear()`.
+  * **Description**: Destroys all nodes. Checks for corrupted chains.
+  * **Time Complexity**: $O(N)$ (calls `clear()`)
 
-#### Assignment Operator
+#### Assignment Operators
 * `CircularLinkedList& operator=(const CircularLinkedList& other)`
-    * **Description**: Assignment operator. Clears the current list and performs a deep copy of the `other` list.
-    * **Time Complexity**: $O(N + M)$, where $N$ is the size of the current list (for `clear()`) and $M$ is the size of the `other` list (for copying).
+  * **Description**: Deep copy assignment.
+  * **Time Complexity**: $O(N + M)$ (N = current size, M = `other` size)
+* `CircularLinkedList& operator+=(const CircularLinkedList& other)`
+  * **Description**: Appends `other` to current list.
+  * **Time Complexity**: $O(M)$ (M = size of `other`)
 
 #### Element Access
 * `T& front() const`
-    * **Description**: Returns a reference to the first element in the list (head). Throws `std::out_of_range` if the list is empty.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Returns first element (head). Throws if empty.
+  * **Time Complexity**: $O(1)$
 * `T& back() const`
-    * **Description**: Returns a reference to the last element in the list (tail). Throws `std::out_of_range` if the list is empty.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Returns last element (tail). Throws if empty.
+  * **Time Complexity**: $O(1)$
 * `T& at(int index)`
-    * **Description**: Returns a reference to the element at the specified `index`. Throws `std::out_of_range` if the `index` is out of bounds.
-    * **Time Complexity**: $O(k)$, where $k$ is the `index`. In the worst case, $O(N)$ for the last element.
+  * **Description**: Returns element at `index`. Throws if out-of-range.
+  * **Time Complexity**: $O(k)$ (k = index)
 * `T& operator[](size_t index)`
-    * **Description**: Overloaded `[]` operator. Provides access to the element at the specified `index`. Does not perform bounds checking (unlike `at()`).
-    * **Time Complexity**: $O(k)$, where $k$ is the `index`. In the worst case, $O(N)$ for the last element.
+  * **Description**: Accesses element at `index` (no bounds checking).
+  * **Time Complexity**: $O(k)$ (k = index)
 
 #### Modifiers
 * `void push_front(const T& data)`
-    * **Description**: Inserts a new element at the beginning of the list.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Inserts element at beginning.
+  * **Time Complexity**: $O(1)$
 * `void push_back(const T& data)`
-    * **Description**: Inserts a new element at the end of the list.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Inserts element at end.
+  * **Time Complexity**: $O(1)$
 * `void pop_front()`
-    * **Description**: Removes the first element from the list. Throws `std::out_of_range` if the list is empty.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Removes first element. Throws if empty.
+  * **Time Complexity**: $O(1)$
 * `void pop_back()`
-    * **Description**: Removes the last element from the list. Throws `std::out_of_range` if the list is empty.
-    * **Time Complexity**: $O(N)$, as it requires traversing to the second-to-last node.
+  * **Description**: Removes last element. Throws if empty.
+  * **Time Complexity**: $O(N)$ (traversal required)
 * `void insert(int pos, const T& value)`
-    * **Description**: Inserts `value` at the specified `pos`. Throws `std::out_of_range` if `pos` is invalid.
-    * **Time Complexity**: $O(k)$, where $k$ is the `pos`. In the worst case, $O(N)$.
+  * **Description**: Inserts `value` at `pos`. Throws if invalid position.
+  * **Time Complexity**: $O(k)$ (k = pos)
 * `void erase(int pos)`
-    * **Description**: Removes the element at the specified `pos`. Throws `std::out_of_range` if `pos` is invalid.
-    * **Time Complexity**: $O(k)$, where $k$ is the `pos`. In the worst case, $O(N)$.
+  * **Description**: Removes element at `pos`. Throws if invalid position.
+  * **Time Complexity**: $O(k)$ (k = pos)
 * `void remove(const T& value)`
-    * **Description**: Removes the first occurrence of `value` from the list.
-    * **Time Complexity**: $O(N)$, as it may require traversing the entire list.
+  * **Description**: Removes first occurrence of `value`.
+  * **Time Complexity**: $O(N)$
 * `void clear()`
-    * **Description**: Removes all elements from the list, making it empty.
-    * **Time Complexity**: $O(N)$, as it repeatedly calls `pop_front()`.
+  * **Description**: Removes all elements.
+  * **Time Complexity**: $O(N)$
 * `void swap(CircularLinkedList& other) noexcept`
-    * **Description**: Swaps the contents of the current list with `other`.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Swaps contents with `other`.
+  * **Time Complexity**: $O(1)$
 * `void merge(CircularLinkedList& other)`
-    * **Description**: Merges the `other` list into the current list, transferring ownership of nodes from `other`. The `other` list becomes empty.
-    * **Time Complexity**: $O(1)$, as it only involves pointer reassignments.
+  * **Description**: Merges `other` into current list
+  * **Time Complexity**: $O(1)$ (Intended)
 * `void reverse()`
-    * **Description**: Reverses the order of elements in the list in-place.
-    * **Time Complexity**: $O(N)$, as it iterates through all nodes to reverse their pointers.
+  * **Description**: Reverses list in-place.
+  * **Time Complexity**: $O(N)$
 * `CircularLinkedList<T> split(int pos)`
-    * **Description**: Splits the current list into two at the specified `pos`. Elements from `pos` to the end are moved to a new `CircularLinkedList` object, which is returned. Throws `std::out_of_range` if `pos` is invalid.
-    * **Time Complexity**: $O(k)$, where $k$ is `pos`. In the worst case, $O(N)$.
+  * **Description**: Splits list at `pos`, returns new list with elements from `pos` to end.
+  * **Time Complexity**: $O(k)$ (k = pos)
 
 #### Capacity
 * `size_t size() const`
-    * **Description**: Returns the number of elements in the list.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Returns number of elements.
+  * **Time Complexity**: $O(1)$
 * `bool empty() const`
-    * **Description**: Checks if the list is empty.
-    * **Time Complexity**: $O(1)$
-* `bool isEmpty() const`
-    * **Description**: Alias for `empty()`. Checks if the list is empty.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Checks if list is empty.
+  * **Time Complexity**: $O(1)$
 
 #### Operations
 * `int find(const T& value) const`
-    * **Description**: Finds the first occurrence of `value` in the list and returns its index. Returns `-1` if `value` is not found.
-    * **Time Complexity**: $O(N)$, as it may require traversing the entire list.
+  * **Description**: Returns index of first `value` occurrence, or -1.
+  * **Time Complexity**: $O(N)$
 * `bool contains(const T& value) const`
-    * **Description**: Checks if `value` exists in the list.
-    * **Time Complexity**: $O(N)$, as it calls `find()`.
+  * **Description**: Checks if `value` exists in list.
+  * **Time Complexity**: $O(N)$
 * `std::vector<T> to_vector() const`
-    * **Description**: Converts the elements of the list into a `std::vector`.
-    * **Time Complexity**: $O(N)$, as it iterates through all elements.
+  * **Description**: Converts list to `std::vector`.
+  * **Time Complexity**: $O(N)$
 * `bool is_list_correct() const`
-    * **Description**: Internal helper function to check the integrity of the circular linkage.
-    * **Time Complexity**: $O(N)$
+  * **Description**: Verifies circular linkage integrity.
+  * **Time Complexity**: $O(N)$
+* `Iterator operator++(int)`
+  * **Description**: Post-increment operator
+  * **Time Complexity**: $O(1)$ (Intended)
 
 #### Operators
 * `CircularLinkedList operator+(const CircularLinkedList& other) const`
-    * **Description**: Concatenation operator. Creates a new list by appending `other` to a copy of the current list.
-    * **Time Complexity**: $O(N + M)$, where $N$ is the size of the current list and $M$ is the size of the `other` list.
-* `CircularLinkedList& operator+=(const CircularLinkedList& other)`
-    * **Description**: Compound concatenation operator. Appends `other` to the current list.
-    * **Time Complexity**: $O(M)$, where $M$ is the size of the `other` list.
+  * **Description**: Returns new concatenated list (current + `other`).
+  * **Time Complexity**: $O(N + M)$ (N = current size, M = `other` size)
 * `friend std::ostream& operator<<(std::ostream& os, const CircularLinkedList& cll)`
-    * **Description**: Overloaded output operator for printing the list elements.
-    * **Time Complexity**: $O(N)$, as it iterates through all elements to print them.
+  * **Description**: Outputs list elements to stream.
+  * **Time Complexity**: $O(N)$
 
 ## Iterator Class
+Bidirectional iterator for traversing circular lists.
 
-The `CircularLinkedList` provides an `Iterator` class to support range-based for loops and standard iterator operations.
-
-### Iterator Members
-* `Node<T>* current`: Pointer to the current node in the iteration.
-* `Node<T>* tailNode`: A reference to the original `tail` of the list, used to determine the end of the circular iteration.
-
-### Iterator Methods
+### Public Methods
 * `Iterator(Node<T>* node, Node<T>* tail)`
-    * **Description**: Constructor for the iterator.
+  * **Description**: Constructs iterator from node and tail reference.
 * `T& operator*() const`
-    * **Description**: Dereference operator. Returns a reference to the data of the `current` node.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Dereferences to node data.
+  * **Time Complexity**: $O(1)$
 * `Iterator& operator++()`
-    * **Description**: Pre-increment operator. Moves the iterator to the next node. If the `current` node is the `tailNode`, it sets `current` to `nullptr` to signal the end of iteration.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Pre-increment. Moves to next node.
+  * **Time Complexity**: $O(1)$
 * `Iterator operator++(int)`
-    * **Description**: Post-increment operator.
-    * **Time Complexity**: $O(1)$
-* `bool operator!=(const Iterator& other) const`
-    * **Description**: Inequality operator. Compares two iterators.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Post-increment.
+  * **Time Complexity**: $O(1)$
 * `bool operator==(const Iterator& other) const`
-    * **Description**: Equality operator. Compares two iterators.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Checks iterator equality.
+  * **Time Complexity**: $O(1)$
+* `bool operator!=(const Iterator& other) const`
+  * **Description**: Checks iterator inequality.
+  * **Time Complexity**: $O(1)$
+* Comparison operators (`<`, `>`, `<=`, `>=`)
+  * **Description**: Compare node pointers.
+  * **Time Complexity**: $O(1)$
 
 ### Iterator Accessors
 * `Iterator begin()`
-    * **Description**: Returns an iterator pointing to the first element (head) of the list.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Returns iterator to first element.
+  * **Time Complexity**: $O(1)$
 * `Iterator end() const`
-    * **Description**: Returns an iterator representing the past-the-end state of the list. This is typically a null pointer to signal the end of iteration in a circular list context.
-    * **Time Complexity**: $O(1)$
+  * **Description**: Returns end iterator (`nullptr`).
+  * **Time Complexity**: $O(1)$
+* `Iterator cbegin() const`
+  * **Description**: Const version of `begin()`.
+  * **Time Complexity**: $O(1)$
+* `Iterator cend() const`
+  * **Description**: Const version of `end()`.
+  * **Time Complexity**: $O(1)$

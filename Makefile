@@ -3,6 +3,7 @@ CXXFLAGS = -Werror -Wpedantic -Wall -std=c++20
 
 BUILDDIR = build
 BINDIR = bin
+DOC = doc
 
 TARGET = $(BINDIR)/Start
 
@@ -32,7 +33,7 @@ $(BUILDDIR)/%.o: %.cpp
 
 test: $(BUILDDIR)/test.o $(OBJS_TEST) | $(BUILDDIR) $(BINDIR)
 	$(CXX) $(CXXFLAGS) -o $(BINDIR)/test $^ $(GTEST_LIBS)
-	$(BINDIR)/test
+	GTEST_OUTPUT=xml:$(DOC)/test_report_new.xml $(BINDIR)/test
 
 $(BUILDDIR)/test.o: test.cpp | $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
