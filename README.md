@@ -11,7 +11,7 @@ This C++ code implements a circular linked list, a dynamic data structure where 
 ## Table of Contents
 - [Installation and Build](#installation-and-build)
 - [Tests](#tests)
-- [Doxygen](#doxygen)
+- [Documents](#documents)
 
 ## Installation and Build
 
@@ -40,7 +40,7 @@ To run tests, you can use the following commands:
 make test    # Runs tests for all programm
 ```
 
-## Doxygen
+## Documents
 This project uses Doxygen to generate developer-friendly documentation from annotated C++ source code.
 To generate the documentation locally:
 
@@ -48,3 +48,5 @@ To generate the documentation locally:
 cd doc
 doxygen Doxyfile    # Creating documentation
 ```
+
+The repository includes automatically generated test reports in both Markdown and HTML formats. These reports are based on Google Test results and provide a clear overview of test coverage and status.
