@@ -6,7 +6,7 @@ Contact: st129457@student.spbu.ru,egor.shast0.0@gmail.com
 
 ## Overview
 
-This repository contains a C++ implementation of a custom STL-style container. The container uses a Skip List as an internal data structure. The goal of the project is to create a container that is as compatible with the STL philosophy as possible: full support for iterators, standard concepts and operators, safe error handling, clean and readable code, as well as built-in tests and CI for reliability and quality assurance.
+This C++ code implements a circular linked list, a dynamic data structure where elements are linked in a circular fashion. It provides functionalities for adding, removing, accessing, and manipulating elements, including iterators for traversal and standard container operations.
 
 ## Table of Contents
 - [Installation and Build](#installation-and-build)
