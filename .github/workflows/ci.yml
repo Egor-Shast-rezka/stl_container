@@ -49,4 +49,6 @@ jobs:
           sudo apt install libeigen3-dev
 
       - name: Build project
-        run: make
+        run: |
+          make
+          make clean
