@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="19" failures="0" disabled="0" errors="0" time="0" timestamp="2025-06-03T16:40:41.279" name="AllTests">
+  <testsuite name="CircularLinkedListTest" tests="19" failures="0" disabled="0" skipped="0" errors="0" time="0" timestamp="2025-06-03T16:40:41.279">
+    <testcase name="InitiallyEmpty" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="PushBackAndAccess" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="PushFrontAndOrder" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="PopFront" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="RemoveValue" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="InsertAndAt" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="EraseIndex" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="Iteration" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="CopyConstructor" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="BracketOperator" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="ClearList" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="SwapLists" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="MergeLists" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="ReverseList" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="MoveConstructor" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="CopyAssignment" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="OutOfRangeAccessThrows" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.279" classname="CircularLinkedListTest" />
+    <testcase name="SingleElementConsistency" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.280" classname="CircularLinkedListTest" />
+    <testcase name="RepeatedPushPop" status="run" result="completed" time="0" timestamp="2025-06-03T16:40:41.280" classname="CircularLinkedListTest" />
+  </testsuite>
+</testsuites>
